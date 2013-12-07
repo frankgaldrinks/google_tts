@@ -60,24 +60,18 @@ module Tts
     base = "#{BASE_URL}?tl=#{LANG}&q=#{URI.escape self}"
   end
 
-  # Fetches the MP3 from Google and stores it in a temporary MP3
+  # Fetches the MP3 from Google and appends it to the output MP3
   def fetch_mp3 url, file_name
     begin 
       content = open(url, "User-Agent" => USER_AGENT).read
  
-      File.open("temp.mp3", "wb") do |f|
+      File.open(file_name, "ab") do |f|
         f.puts content
       end
-      merge_mp3_file(file_name)
     rescue => e
       $stderr.puts("Internet error! #{e.message}")
       exit(1)
     end
-  end
-
-  # Merges the temporary MP3 with the output file, then deletes the temporary file
-  def merge_mp3_file file_name
-    `cat temp.mp3 >> "#{file_name}" && rm temp.mp3`
   end
 
 end
